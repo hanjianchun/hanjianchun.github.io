@@ -10,7 +10,7 @@ author: HjC
 {:toc}
 
 第一个博客，留着纪念一下，哦耶！
-![](http://bcs.91.com/rbpiczy/Wallpaper/2014/11/24/28fa8b17435842bd819007d7451b4a38-11.jpg)
+![](http://pic112.nipic.com/file/20161006/7222844_214447578000_2.jpg)
 
 
 
