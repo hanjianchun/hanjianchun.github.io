@@ -10,7 +10,7 @@ author: HjC
 {:toc}
 
 第一个博客，留着纪念一下，哦耶！
-![](http://4493bz.1985t.com/uploads/allimg/150127/4-15012G52133.jpg)
+![](http://bcs.91.com/rbpiczy/Wallpaper/2014/11/24/28fa8b17435842bd819007d7451b4a38-11.jpg)
 
 
 
@@ -44,6 +44,6 @@ author: HjC
 
 ## 看小猫咪
 
-![](http://4493bz.1985t.com/uploads/allimg/150127/4-15012G52133.jpg)
+![](http://bcs.91.com/rbpiczy/Wallpaper/2014/11/24/28fa8b17435842bd819007d7451b4a38-11.jpg)
 
 
