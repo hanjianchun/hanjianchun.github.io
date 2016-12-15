@@ -38,7 +38,13 @@ author: HjC
 
 ## 看2017年鸡年
 
-    insert into java script
+       	public Page<FloodSeason> getByPage(Page<FloodSeason> page,String startYear) {
+    		page.setPageSize(10);
+    		StringBuffer sb=new StringBuffer(" from FloodSeason");
+    		sb.append(" where year > :p1");
+    		sb.append(" order by year desc");
+    		return this.find(page,sb.toString(),new Parameter(startYear));
+    	}
 
 
 12/15/2016 9:34:17 AM 
