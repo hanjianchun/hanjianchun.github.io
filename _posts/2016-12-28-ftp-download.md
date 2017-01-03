@@ -3,7 +3,7 @@ layout: post
 title:  "linux如何实现ftp下载"
 categories: ftp
 tags:  ftp download
-author: HjC
+author: hanjianchun
 ---
 
 * content
@@ -22,7 +22,7 @@ Linux环境下实现ftp远程下载文件
 # 服务端配置(192.168.201.130) #
 
 
-> 首先检查服务端有没有安装vsfpd服务
+> 首先检查服务端有没有安装vsftpd服务
 
     > rpm -qa | grep vsftpd 
     > vsftpd-2.2.2-21.el6.x86_64

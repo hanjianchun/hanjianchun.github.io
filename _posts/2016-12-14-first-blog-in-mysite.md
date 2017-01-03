@@ -3,7 +3,7 @@ layout: post
 title:  "第一个博客，纪念一下"
 categories: countdown
 tags:  countdown
-author: HjC
+author: hanjianchun
 ---
 
 * content
