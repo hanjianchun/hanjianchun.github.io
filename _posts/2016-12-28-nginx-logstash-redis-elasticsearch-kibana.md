@@ -200,3 +200,191 @@ output {
 	339530			body_bytes_sent
 	"-"			http_refer
 	"Mozilla/5.0 (iPhone; CPU iPhone OS 8_4 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H143 Safari/600.1.4" 			user_agent
+
+知道了每个字段都代表什么意思那就简单多了，对每个字段定义正则,格式为前面是正则，后面是字段名 *%{正则：字段}*，空格也需要加上：
+	       
+	180.153.214.198		%{IPV4:remote_ip}			
+			-	(%{IPV4:http_x_forwarded_for}|-)	表示可能是 - 也可能是具体IP值
+			-   (%{IPV4:remote_user}|-)
+	[04/Jan/2017:08:44:40 +0000]	\[%{MONTHDAY:day}\/%{MONTH:month}\/%{YEAR}:%{HOUR:hour}:%{MINUTE:min}:%{SECOND:sec} %{ISO8601_TIMEZONE:tz}\] 	'\'是转义
+	"GET /url.com HTTP/1.1"		\"%{WORD:httpmethod} %{DATA:uripath} %{URIPROTO:uriproto1}\/%{BASE16FLOAT:httpversion}\"
+	200		 %{INT:http_status}
+	339530			(%{INT:body_bytes_sent}|\-)
+	"-"			\"(%{URI:http_refer}|\-)\"
+	"Mozilla/5.0 (iPhone; CPU iPhone OS 8_4 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H143 Safari/600.1.4" 			\"%{DATA:user_agent}\"
+
+
+	最后和并起来就是：
+	%{IPV4:remote_ip} (%{IPV4:http_x_forwarded_for}|-) (%{IPV4:remote_user}|-) \[%{MONTHDAY:day}\/%{MONTH:month}\/%{YEAR}:%{HOUR:hour}:%{MINUTE:min}:%{SECOND:sec} %{ISO8601_TIMEZONE:tz}\] \"%{WORD:httpmethod} %{DATA:uripath} %{URIPROTO:uriproto1}\/%{BASE16FLOAT:httpversion}\" %{INT:http_status} (%{INT:body_bytes_sent}|\-) \"(%{URI:http_refer}|\-)\" \"%{DATA:user_agent}\"
+
+可以把它们放到Grok Debugger里面去测试查看最后的结果，最后的结果为：
+
+```
+	{
+  "remote_ip": [
+    [
+      "180.153.214.198"
+    ]
+  ],
+  "http_x_forwarded_for": [
+    [
+      null
+    ]
+  ],
+  "remote_user": [
+    [
+      null
+    ]
+  ],
+  "day": [
+    [
+      "04"
+    ]
+  ],
+  "month": [
+    [
+      "Jan"
+    ]
+  ],
+  "YEAR": [
+    [
+      "2017"
+    ]
+  ],
+  "hour": [
+    [
+      "08"
+    ]
+  ],
+  "min": [
+    [
+      "44"
+    ]
+  ],
+  "sec": [
+    [
+      "40"
+    ]
+  ],
+  "tz": [
+    [
+      "+0000"
+    ]
+  ],
+  "HOUR": [
+    [
+      "00"
+    ]
+  ],
+  "MINUTE": [
+    [
+      "00"
+    ]
+  ],
+  "httpmethod": [
+    [
+      "GET"
+    ]
+  ],
+  "uripath": [
+    [
+      "/url.com"
+    ]
+  ],
+  "uriproto1": [
+    [
+      "HTTP"
+    ]
+  ],
+  "httpversion": [
+    [
+      "1.1"
+    ]
+  ],
+  "http_status": [
+    [
+      "200"
+    ]
+  ],
+  "body_bytes_sent": [
+    [
+      "339530"
+    ]
+  ],
+  "http_refer": [
+    [
+      null
+    ]
+  ],
+  "URIPROTO": [
+    [
+      null
+    ]
+  ],
+  "USER": [
+    [
+      null
+    ]
+  ],
+  "USERNAME": [
+    [
+      null
+    ]
+  ],
+  "URIHOST": [
+    [
+      null
+    ]
+  ],
+  "IPORHOST": [
+    [
+      null
+    ]
+  ],
+  "HOSTNAME": [
+    [
+      null
+    ]
+  ],
+  "IP": [
+    [
+      null
+    ]
+  ],
+  "IPV6": [
+    [
+      null
+    ]
+  ],
+  "IPV4": [
+    [
+      null
+    ]
+  ],
+  "port": [
+    [
+      null
+    ]
+  ],
+  "URIPATHPARAM": [
+    [
+      null
+    ]
+  ],
+  "URIPATH": [
+    [
+      null
+    ]
+  ],
+  "URIPARAM": [
+    [
+      null
+    ]
+  ],
+  "user_agent": [
+    [
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 8_4 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H143 Safari/600.1.4"
+    ]
+  ]
+}
+```
