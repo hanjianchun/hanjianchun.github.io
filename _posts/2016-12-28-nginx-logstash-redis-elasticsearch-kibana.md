@@ -181,5 +181,22 @@ output {
 }
 ```
 
-未完待续...
+## grok插件格式化日志
 
+日志格式默认会已json的格式存放在message里面，不太好看，所以按照固定的格式把它展现出来就很有必要，这里介绍grok过滤；
+
+介绍个网站[Grok Debugger](http://grokdebug.herokuapp.com/)，这个网站可以在线直观测试编写的校验代码；而且还把自带的正则库都列出来了，这里介绍入门的编写方法；
+
+	比如有nginx手机app访问日志，格式如：
+	180.153.214.198 - - [04/Jan/2017:08:44:40 +0000] "GET /url.com HTTP/1.1" 200 339530 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 8_4 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H143 Safari/600.1.4"
+
+	这里可以根据nginx的logformat知道以空格隔开的各个字段都代表什么意思：
+	180.153.214.198			remote_ip
+		-	http_x_forwarded_for
+		-	remote_user
+	[04/Jan/2017:08:44:40 +0000]		时间
+	"GET /url.com HTTP/1.1"		访问方式，路径，类型，版本
+	200			http_status
+	339530			body_bytes_sent
+	"-"			http_refer
+	"Mozilla/5.0 (iPhone; CPU iPhone OS 8_4 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H143 Safari/600.1.4" 			user_agent
