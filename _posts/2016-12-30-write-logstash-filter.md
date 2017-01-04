@@ -93,7 +93,27 @@ IP配置表的格式：[10.11.1/200,10.11.1]
 
 这里需要用到json,如果安装了rubygems可以直接使用命令安装
 
-	gem install rubygems
+	gem install json
+
+如果没有安装rubygems或者gem source在国内失效无法安装json,那就可以使用我这个办法
+
+```shell
+[root@localhost logstash-5.1.1]# find vendor/* -name json.rb
+vendor/bundle/jruby/1.9/gems/json-1.8.3-java/lib/json.rb
+vendor/bundle/jruby/1.9/gems/http-0.9.9/lib/http/mime_type/json.rb
+vendor/bundle/jruby/1.9/gems/logstash-codec-json-3.0.2/lib/logstash/codecs/json.rb
+vendor/bundle/jruby/1.9/gems/logstash-filter-json-3.0.2/lib/logstash/filters/json.rb
+vendor/bundle/jruby/1.9/gems/aws-sdk-core-2.3.22/lib/aws-sdk-core/json.rb
+vendor/bundle/jruby/1.9/gems/aws-sdk-core-2.3.22/lib/aws-sdk-core/stubbing/protocols/json.rb
+vendor/bundle/jruby/1.9/gems/coderay-1.1.1/lib/coderay/scanners/json.rb
+vendor/bundle/jruby/1.9/gems/coderay-1.1.1/lib/coderay/encoders/json.rb
+vendor/jruby/lib/ruby/shared/json.rb
+
+```
+
+可以看到在logstash的vendor目录下有很多json.rb文件，我选择的是
+
+	/logstash/vendor/bundle/jruby/1.9/gems/json-1.8.3-java/lib/json.rb
 
 ```ruby
 #encoding:utf-8
