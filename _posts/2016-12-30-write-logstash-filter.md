@@ -241,3 +241,12 @@ output {
 
 ![](/image/2016/12/20161230_ftp.png)
 
+
+## 注意问题
+
+在自定义插件里添加字段的时候有一个坑，那就是logstash的版本问题，我自己在测试的时候使用的最新版的5.0，所以正如我自己写的那个插件那样 *event.set("source",'other')* ,但是到了我们生产环境里就不好使了，生产使用的是1.5.3版本，所以当时还没有这个方法；然后就去找logstash自带的插件 *geoip* ,目录是
+
+	vendor/bundle/jruby/1.9/gems/logstash-filter-mutate-1.0.0/lib/logstash/filters
+
+在这里面的写法是 *event[key]=value* ,然后问题就解决了；
+所以在logstash filter插件资料很少的情况下，要有新的思路去寻找解决办法，参考自带的插件就是一个最好的办法。
