@@ -36,6 +36,12 @@ nginx将用户访问的一些信息写入到access.log中，logstash的shipper�
 - Server2:	192.168.201.132		redis
 - Server3:	192.168.201.133		nginx logstash shipper
 
+
+>角色启动
+
+	Server3启动nginx后监听端口记录日志，启动logstash:nohup ./bin/logstash -f etc/shipper.conf,配置文件里指定输入为nginx的访问日志，输出为Server2的redis，过滤自己定义；
+
+
 ## 软件安装
 
 >安装ES
