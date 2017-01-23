@@ -57,7 +57,7 @@ author: hanjianchun
 
 - 新建一个shell脚本
 	
-	```shell
+```shell
 	#!/bin/bash
 	
 	cd /home/logstash/logstash-1.5.3/pure_solve #切换目录
@@ -73,7 +73,7 @@ author: hanjianchun
 	        startLine=$endLine		#移动步子
 	        echo $startLine > sincedb	#记录刷到什么地方了
 	done
-	```
+```
 
 - 将logstash shipper的input path设置为新的 /home/logstash/logstash-1.5.3/pure_solve/pureftpd_new.log，启动logstash
 
