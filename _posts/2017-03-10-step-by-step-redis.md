@@ -41,6 +41,10 @@ author: hanjianchun
 
 ## 在项目里使用redis
 
+>首次连接会发现无法连接redis，因为redis有保护模式，在redis.conf里面去掉保护模式，然后启动的时候指定配置文件 src/redis-server redis.conf
+
+	protected-mode no
+
 >需要redis的jar包，去maven仓库搜索jedis就会出现，使用jedis作为redis的客户端
 
 	<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
