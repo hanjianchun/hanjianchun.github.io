@@ -298,3 +298,281 @@ public class RedisClientUtils {
 	RedisClientUtils.get("han");
 
 其它的方法需要自己去摸索尝试
+
+
+## redis与Spring项目整合
+
+>不同之处在于将缓冲池交给redis进行管理
+
+	<!-- master连接池参数 -->
+   	<bean id="masterPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<!-- <property name="maxActive" value="${redis.master.pool.max_active}"/> -->
+		<property name="maxIdle" value="${redis.master.pool.max_idle}" />
+		<property name="maxWaitMillis" value="${redis.master.pool.max_wait}" />
+		<property name="testOnBorrow" value="${redis.master.pool.testOnBorrow}" />
+		<property name="testOnReturn" value="${redis.master.pool.testOnReturn}" />
+	</bean>
+	
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool"
+		destroy-method="destroy">
+		<constructor-arg index="0" ref="masterPoolConfig" />
+		<constructor-arg index="1" value="${redis.master.server.ip}" />
+		<constructor-arg index="2" value="${redis.master.server.port}" type="int" />
+	</bean>
+
+> 访问客户端,这里仅提供操作key的一个方法，还可以操作List,Hash,Set,String等
+
+```java
+
+@Service
+public class JedisService {
+	private static final int REDIS_DB_INDEX = 0;
+	private static Logger LOG = LoggerFactory.getLogger(JedisService.class.getSimpleName());
+
+	@Autowired
+	private JedisPool jedisPool;
+
+	private void saveAndReturnResource(Jedis jedis) {
+		String result = jedis.save();
+		LOG.debug("Redis数据保存结果:{}", result);
+		returnResource(jedis);
+	}
+
+	private void returnResource(Jedis jedis){
+		jedisPool.returnResource(jedis);
+	}
+	
+	private Jedis getJedis(){
+		Jedis jedis = jedisPool.getResource();
+		String select = jedis.select(REDIS_DB_INDEX);
+		LOG.debug("Redis {}号数据库选择结果:{}", REDIS_DB_INDEX, select);
+		return jedis;
+	}
+	
+	/** 
+	 * 清空当前数据库 
+	 * @return 状态码 
+	 * */
+	public String flushDB() {
+		Jedis jedis = getJedis();
+		String stata = jedis.flushDB();
+		saveAndReturnResource(jedis);
+		return stata;
+	}
+	
+	/**操作Key的方法*/
+	public Keys KEYS = new Keys();
+	public class Keys {
+		/** 
+		 * 更改key 
+		 * @param String oldkey 
+		 * @param String newkey 
+		 * @return 状态码 
+		 * */
+		public String rename(String oldkey, String newkey) {
+			return rename(SafeEncoder.encode(oldkey), SafeEncoder.encode(newkey));
+		}
+
+		/** 
+		 * 更改key,仅当新key不存在时才执行 
+		 * @param String oldkey 
+		 * @param String newkey 
+		 * @return 状态码 
+		 * */
+		public long renamenx(String oldkey, String newkey) {
+			Jedis jedis = getJedis();
+			long status = jedis.renamenx(oldkey, newkey);
+			saveAndReturnResource(jedis);
+			return status;
+		}
+
+		/** 
+		 * 更改key 
+		 * @param String oldkey 
+		 * @param String newkey 
+		 * @return 状态码 
+		 * */
+		public String rename(byte[] oldkey, byte[] newkey) {
+			Jedis jedis = getJedis();
+			String status = jedis.rename(oldkey, newkey);
+			saveAndReturnResource(jedis);
+			return status;
+		}
+
+		/** 
+		 * 设置key的过期时间，以秒为单位 
+		 * @param String key 
+		 * @param 时间,已秒为单位 
+		 * @return 影响的记录数 
+		 * */
+		public long expired(String key, int seconds) {
+			Jedis jedis = getJedis();
+			long count = jedis.expire(key, seconds);
+			returnResource(jedis);
+			return count;
+		}
+
+		/** 
+		 * 设置key的过期时间,它是距历元（即格林威治标准时间 1970 年 1 月 1 日的 00:00:00，格里高利历）的偏移量。 
+		 * @param String key 
+		 * @param 时间,已秒为单位 
+		 * @return 影响的记录数 
+		 * */
+		public long expireAt(String key, long timestamp) {
+			Jedis jedis = getJedis();
+			long count = jedis.expireAt(key, timestamp);
+			returnResource(jedis);
+			return count;
+		}
+
+		/** 
+		 * 查询key的过期时间 
+		 * @param String key 
+		 * @return 以秒为单位的时间表示 
+		 * */
+		public long ttl(String key) {
+			Jedis jedis = getJedis();
+			long len = jedis.ttl(key);
+			returnResource(jedis);
+			return len;
+		}
+
+		/** 
+		 * 取消对key过期时间的设置 
+		 *@param key 
+		 *@return 影响的记录数 
+		 * */
+		public long persist(String key) {
+			Jedis jedis = getJedis();
+			long count = jedis.persist(key);
+			returnResource(jedis);
+			return count;
+		}
+
+		/** 
+		 * 删除keys对应的记录,可以是多个key 
+		 * @param String... keys 
+		 * @return 删除的记录数 
+		 * */
+		public long del(String... keys) {
+			Jedis jedis = getJedis();
+			long count = jedis.del(keys);
+			saveAndReturnResource(jedis);
+			return count;
+		}
+
+		/** 
+		 * 删除keys对应的记录,可以是多个key 
+		 * @param String... keys 
+		 * @return 删除的记录数 
+		 * */
+		public long del(byte[]... keys) {
+			Jedis jedis = getJedis();
+			long count = jedis.del(keys);
+			saveAndReturnResource(jedis);
+			return count;
+		}
+
+		/** 
+		 * 判断key是否存在 
+		 * @param String key 
+		 * @return boolean 
+		 * */
+		public boolean exists(String key) {
+			Jedis jedis = getJedis();
+			boolean exis = jedis.exists(key);
+			returnResource(jedis);
+			return exis;
+		}
+
+		/** 
+		 * 对List,Set,SortSet进行排序,如果集合数据较大应避免使用这个方法 
+		 * @param String key 
+		 * @return List<String> 集合的全部记录 
+		 * **/
+		public List<String> sort(String key) {
+			Jedis jedis = getJedis();
+			List<String> list = jedis.sort(key);
+			saveAndReturnResource(jedis);
+			return list;
+		}
+
+		/** 
+		 * 对List,Set,SortSet进行排序或limit 
+		 * @param String key 
+		 * @param SortingParams parame 定义排序类型或limit的起止位置. 
+		 * @return List<String> 全部或部分记录 
+		 * **/
+		public List<String> sort(String key, SortingParams parame) {
+			Jedis jedis = getJedis();
+			List<String> list = jedis.sort(key, parame);
+			saveAndReturnResource(jedis);
+			return list;
+		}
+
+		/** 
+		 * 返回指定key存储的类型 
+		 * @param String key 
+		 * @return String  string|list|set|zset|hash 
+		 * **/
+		public String type(String key) {
+			Jedis jedis = getJedis();
+			String type = jedis.type(key);
+			returnResource(jedis);
+			return type;
+		}
+
+		/** 
+		 * 查找所有匹配给定的模式的键 
+		 * @param String key的表达式,*表示多个，？表示一个 
+		 * */
+		public Set<String> kyes(String pattern) {
+			Jedis jedis = getJedis();
+			Set<String> set = jedis.keys(pattern);
+			returnResource(jedis);
+			return set;
+		}
+	}
+
+}
+```
+
+> redis不提供直接存储实体类的功能，当时可以先把实体类转为bytes[]，然后存入，取得时候再反转一下，下面是工具类：
+
+```java
+public class SerializeUtil {
+	public static byte[] serialize(Object object) {
+		ObjectOutputStream oos = null;
+		ByteArrayOutputStream baos = null;
+		try {
+			//序列化  
+			baos = new ByteArrayOutputStream();
+			oos = new ObjectOutputStream(baos);
+			oos.writeObject(object);
+			byte[] bytes = baos.toByteArray();
+			return bytes;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static Object unserialize(byte[] bytes) {
+		ByteArrayInputStream bais = null;
+		try {
+			//反序列化  
+			bais = new ByteArrayInputStream(bytes);
+			ObjectInputStream ois = new ObjectInputStream(bais);
+			return ois.readObject();
+		} catch (Exception e) {
+
+		}
+		return null;
+	}
+}
+
+```
+
+## 结束
+
+	到这里如何在项目里使用redis就结束了，欢迎讨论！
