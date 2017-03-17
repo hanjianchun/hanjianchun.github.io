@@ -9,7 +9,7 @@ author: hanjianchun
 * content
 {:toc}
 
-从安装redis开始到使用redis，一步一步教你怎么使用redis作为项目的缓存。
+项目里的API提供接口调用，每个用户每日限制调用次数，之前用的memcached缓存，缓存的key是用户ID+日期，过期时间是1天。这么做没什么毛病，虽然memcached速度快但是不能持久化。所以现在改用redis来缓存每日每个用户的访问次数。
 
 
 
