@@ -19,7 +19,7 @@ author: hanjianchun
 > 1.下载软件Anaconda，下载完成后进入控制台：conda install scrapy;
 > 2.Faker是一个可以让你生成伪造数据的Python包，安装pip install faker
 
-##开始项目
+## 开始项目
 
 >因为使用的scrapy，所以我们需要新建一个scrapy项目，打开cmd：
 
@@ -27,7 +27,7 @@ author: hanjianchun
 
 >这就新建了一个scrapy的项目，这里有scrapy的中文页http://scrapy-chs.readthedocs.io/zh_CN/0.24/intro/tutorial.html，里面比较详细的描述了scrapy
 	
-##代码编写
+## 代码编写
 
 
 >在items里面新建一个item,我这里只取出评论数据，当然也可以取出更多的数据，比如时间、几颗星、是否有用、评论人等等，数据量越多关联越大，分析的准确性和可靠度也越大；
@@ -147,6 +147,6 @@ word_stat = word_stat.reset_index().sort(columns='计数',ascending=False)
 print word_stat
 ```
 
-##结束语
+## 结束语
 
 >抓取数据，数据统计展示都已经做完了，这里写的感觉很简单，但是在真正实施起来会遇到很多的问题，这一套搞下来锻炼了解决问题能力，思维能力等
