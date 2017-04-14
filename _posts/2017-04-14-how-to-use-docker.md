@@ -83,8 +83,9 @@ docker容器安装部署javaweb项目
 	
 > 完美解决了docker commit的缺点，用什么就装什么，一点不浪费；
 
-	首先在/home/ok/tomcat目录下新建文件，名为：Dockerfile
-```docker
+	首先在/home/ok/tomcat目录下新建文件，名为：Dockerfile,然后拷贝jdk，tomcat到当前目录，项目打包成ROOT.tar.gz;
+
+```java
 # Pull base image
 FROM centos:latest
 
@@ -109,3 +110,39 @@ EXPOSE 8080
 ENTRYPOINT /root/apache-tomcat-7.0.77/bin/startup.sh && tail -f /root/apache-tomcat-7.0.77/logs/catalina.out
 
 ```
+
+	指令详解：
+	FROM	指明从哪个镜像制作
+	MAINTAINER	名称	  邮箱
+	ADD 	如果 <源路径> 为一个 tar 压缩文件的话，压缩格式为 gzip, bzip2 以及 xz 的情况下，ADD 指令将会自动解压缩这个压缩文件到 <目标路径> 去。
+	COPY	将文件从<源路径>复制到<目标路径>
+	RUN		在制作镜像的过程中执行linux指令
+	EXPOSE	指定对外提供的端口
+	ENV		设置环境变量
+	ENTRYPOINT		指定镜像启动的入口点
+
+> Dockerfile编写完成后进行镜像生成
+
+	docker build -t javaweb:0.1 .		#这句执行后会生成一个名为javawebTAG为0.1的镜像
+
+> 启动容器
+
+	docker run -d -p 8080:8080 --name tomcat_01 javaweb:0.1
+	启动完成后会自动启动tomcat并部署项目
+	如果想再启动一个容器，把端口和名称换一下就行
+	docker run -d -p 8888:8080 --name tomcat_02 javaweb:0.1
+
+> 现在就可以通过 http://ip:8080访问web网站了
+
+## 遇到的问题
+	
+> docker部署了tomcat后调用命令 bin/startup.sh发现启动特别慢
+
+	修改tomcat/bin目录下的文件catalina.sh
+	加入下面一段代码。解决启动时耗时太久的问题
+	if [[ "$JAVA_OPTS" != *-Djava.security.egd=* ]]; then 
+		JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/./urandom" 
+	fi
+
+	在dockerfile的时候把这个文件替换掉也可以的
+
