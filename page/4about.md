@@ -11,7 +11,7 @@ icon: heart
 ## 关于我
 
 ```java
-	System.out.println(我是一个Java后端程序员，2014年11月份正式成为北漂程序猿！);
+	System.out.println("我是一个Java后端程序员，2014年11月份正式成为北漂程序猿！");
 ```
 
 ## 联系我
