@@ -30,7 +30,7 @@ author: hanjianchun
 
 	家庭地址信息录入包含下面6个控件，成对出现；
 
-![](/image/2017/10/family-address.jpg.jpg)
+![](/image/2017/10/family-address.jpg)
 
 	所属社区对应name="cascade-comm-"+new Date().getTime()
 	所属小区对应name="cascade-village-"+new Date().getTime()
