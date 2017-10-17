@@ -50,17 +50,17 @@ author: hanjianchun
 
 	
 - 参数
-	dicName：获取数据的类型；  
-				获取小区对应  village
-				获取楼宇对应  building
-				获取房间对应  house
-	id：检索数据的value值;
+	- dicName：获取数据的类型；
+	- id：检索数据的value值;
 				
-
-	改变社区时，id为所选社区的value值  dicName=village
-	改变楼宇时，id为所选楼宇的value值	dicName=building
-	改变楼宇时，id为所选房间的value值	dicName=house
+	- 改变社区时，id为所选社区的value值dicName=village
+	- 改变楼宇时，id为所选楼宇的value值	dicName=building
+	- 改变楼宇时，id为所选房间的value值	dicName=house
 				
+- 返回值
+	- 200 获取成功
+	- 404 参数错误
+	- 500 服务器错误
 
 
 
