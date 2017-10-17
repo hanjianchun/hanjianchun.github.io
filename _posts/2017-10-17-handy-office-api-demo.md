@@ -61,6 +61,5 @@ author: hanjianchun
 	- 404 参数错误
 	- 500 服务器错误
 
-<font color=#0099ff size=5 face="黑体">提交走访调查新增返回码 202 身份证号码不正确</font>
-
-<font color=red size=5 face="黑体">控件类型为select时的下拉，修改为给用户显示label,现在的显示value</font>
+## 1.提交走访调查新增返回码 202 身份证号码不正确 ##
+## 2.控件类型为select时的下拉，修改为给用户显示label,现在的显示value ##
