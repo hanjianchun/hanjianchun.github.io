@@ -51,15 +51,6 @@ author: hanjianchun
 - 参数
 	- dicName：获取数据的类型；
 	- id：检索数据的value值;
-	
-| 改变社区 |  改变小区  |  改变楼宇
-
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
-
 
 	- 改变社区时，id为所选社区的value值dicName=village
 	- 改变小区时，id为所选小区的value值	dicName=building
