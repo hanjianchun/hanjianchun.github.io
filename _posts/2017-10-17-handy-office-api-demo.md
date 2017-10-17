@@ -39,9 +39,28 @@ author: hanjianchun
 
 ----------
 
-	以上四个控件需要下拉级联：选择所属社区后去根据接口获取小区列表，将获取的数据填充到所属所属小区下拉控件中以供选择；
+	其中四个控件需要下拉级联：选择所属社区后去根据接口获取小区列表，将获取的数据填充到所					   属所属小区下拉控件中以供选择；
 						   选择小区后根据接口获取楼宇列表，将获取的数据填充到所属楼宇
-	下拉控件中以供选择；
-						   选择楼宇后根据接口获取房屋列表，
+	                       下拉控件中以供选择；
+						   选择楼宇后根据接口获取房屋列表，获取到的数据作为房间号的联想数据，不用作为下拉数据；
+    
+    上传选择数据时，name以cascade开头的和以dic开头的一样，传value值
+
+> 级联获取接口地址：http://juhui.izouping.cn/server/getDicList.action
+
+	
+- 参数
+	dicName：获取数据的类型；  
+				获取小区对应  village
+				获取楼宇对应  building
+				获取房间对应  house
+	id：检索数据的value值;
+				
+
+	改变社区时，id为所选社区的value值  dicName=village
+	改变楼宇时，id为所选楼宇的value值	dicName=building
+	改变楼宇时，id为所选房间的value值	dicName=house
+				
+
 
 
